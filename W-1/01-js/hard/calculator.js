@@ -30,7 +30,7 @@ class Calculator {
     this.result -= value;
     console.log(this.result);
   }
-  multiply(value) {
+  multiply(value) { 
     this.result *= value;
     console.log(this.result);
   }
