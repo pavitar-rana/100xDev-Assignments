@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo</title>
+    <style>
+      #content {
+        margin-top: 30px;
+        border: 1px solid black;
+        padding: 10px;
+        box-sizing: content-box;
+        width: max-content;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="" onsubmit="press()">
+      <label for="">Todo Title &emsp; &emsp; &ensp; :</label>
+      <input type="text" name="" id="title" /> <br />
+      <label for="">Todo Description :</label>
+      <input type="text" name="" id="description" /> <br />
+      <input type="submit" value="Send" />
+    </form>
+    <div id="main"></div>
+  </body>
+  <script>
+    var data1;
+    getData();
+    function press() {
+      event.preventDefault();
+      var title = document.getElementById("title").value;
+      var description = document.getElementById("description").value;
+
+      fetch("http://localhost:3000/todos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+        }),
+      }).then((resp) => {
+        resp.json().then((data) => {
+          console.log(data);
+        });
+      });
+    }
+    function deleteDone() {
+      console.log("done delete");
+    }
+    function deleteClicked(id, button) {
+      console.log(id);
+
+      fetch(`http://localhost:3000/todos/${id}`, {
+        method: "DELETE",
+      }).then(() => {
+        const parentElement = document.getElementById("main");
+        const elementToDelete = button.parentElement;
+        parentElement.removeChild(elementToDelete);
+      });
+    }
+
+    function getData() {
+      fetch("http://localhost:3000/todos", {
+        method: "GET",
+      }).then((resp) => {
+        resp.json().then((_data) => {
+          let main = document.getElementById("main");
+          for (let i = 0; i < _data.length; i++) {
+            let div = document.createElement("div");
+            div.id = "content";
+            let p_id = document.createElement("p");
+            let p_title = document.createElement("p");
+            let p_description = document.createElement("p");
+            let btn = document.createElement("button");
+            btn.innerHTML = "Delete";
+            btn.setAttribute("onclick", `deleteClicked(${_data[i].id}, this)`);
+            p_id.innerHTML = _data[i].id;
+            p_title.innerHTML = _data[i].title;
+            p_description.innerHTML = _data[i].description;
+            div.append(p_id, p_title, p_description, btn);
+            main.appendChild(div);
+          }
+        });
+      });
+    }
+
+    function showData() {}
+    showData();
+  </script>
+</html>
