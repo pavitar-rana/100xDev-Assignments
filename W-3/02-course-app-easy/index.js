@@ -65,16 +65,15 @@ app.post("/admin/courses", adminAuthentication, (req, res) => {
 
 app.put("/admin/courses/:courseId", adminAuthentication, (req, res) => {
   // logic to edit a course
+  const courseId = parseInt(req.params.courseId);
+  let course = COURSES.find((c) => c.id === courseId);
 
-  const newCourse = req.body;
-  const courseId = req.params.courseId;
-  let courseIndex = COURSES.findIndex((c) => c.id.toString() === courseId);
-  newCourse.id = Number(courseId);
-  if (courseIndex <= COURSES.length) {
-    COURSES[courseIndex] = newCourse;
+  console.log(course);
+  if (course) {
+    Object.assign(course, req.body);
     res.json({ message: "Course updated successfully" });
   } else {
-    res.status(403).send("not updated");
+    res.status(404).send("Course does't exist");
   }
 });
 
@@ -109,7 +108,7 @@ app.get("/users/courses", userAuthentication, (req, res) => {
 
 app.post("/users/courses/:courseId", userAuthentication, (req, res) => {
   // logic to purchase a course
-  const courseId = Number(req.params.courseId);
+  const courseId = parseInt(req.params.courseId);
 
   let courseIndex = COURSES.findIndex((course) => course.id === courseId);
   purchasedCourses.push(COURSES[courseIndex]);

@@ -40,6 +40,10 @@ function Login() {
               id="outlined-basic"
               label="Email"
               variant="outlined"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                console.log(email);
+              }}
             />
             <br />
             <br />

@@ -1,4 +1,5 @@
 import { Button, Link, Typography } from "@mui/material";
+// eslint-disable-next-line no-unused-vars
 import React from "react";
 
 function Appbar() {
@@ -18,7 +19,6 @@ function Appbar() {
           marginRight: 20,
         }}
       >
-        {" "}
         <Link href={"/register"}>
           <Button size={"large"} variant="contained">
             Signup

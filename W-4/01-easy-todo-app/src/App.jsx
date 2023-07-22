@@ -1,13 +1,24 @@
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
-import "./App.css";
 import axios from "axios";
+import ShowTodo from "./components/ShowTodo";
 
 function App() {
   const [todos, setTodos] = useState([]);
-  axios.get("http://localhost:3000/todos").then((response) => {
-    console.log(response.data);
-  });
+
+  const create = async () => {
+    const newTodo = {
+      title: document.getElementById("title").value,
+      description: document.getElementById("description").value,
+    };
+
+    try {
+      await axios.post("http://localhost:3000/todos", newTodo);
+      console.log("Todo created successfully");
+      setTodos([...todos, newTodo]);
+    } catch (error) {
+      console.error("Error creating todo:", error);
+    }
+  };
 
   return (
     <>
@@ -18,30 +29,11 @@ function App() {
         <button onClick={create} id="createBtn">
           Create Todo
         </button>
-        <div id="listArea"></div>
+        <div id="listArea">
+          <ShowTodo refresh={todos} />
+        </div>
       </div>
     </>
-  );
-
-
-}
-
-function create() {
-  const newTodo = {
-    title: document.getElementById("title").value,
-    description: document.getElementById("description").value,
-  };
-  axios.post("http://localhost:3000/todos", newTodo).then((resp) => {
-    console.log(resp.data);
-  });
-}
-
-function ShowTodo({ title, description }) {
-  return (
-    <div>
-      <h2>{title}</h2>
-      <p>{description}</p>
-    </div>
   );
 }
 
