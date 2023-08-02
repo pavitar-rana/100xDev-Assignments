@@ -3,10 +3,13 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { Card, Typography } from "@mui/material";
 import Appbar from "./Appbar";
-/// File is incomplete. You need to add input boxes to take input for users to login.
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = React.useState("");
-  //   Email - <input type={"text"} onChange={(e) => setEmail(e.target.value)} />;
+  const [password, setPassword] = React.useState("");
 
   return (
     <>
@@ -22,9 +25,7 @@ function Login() {
             display: "flex",
             justifyContent: "center",
           }}
-        >
-          <Typography variant={"h6"}>Welcome Back. Sign In below</Typography>
-        </div>
+        ></div>
 
         <div
           style={{
@@ -33,7 +34,13 @@ function Login() {
           }}
         >
           <Card style={{ width: 400, padding: 20 }}>
-            <h1>Login to the website</h1>
+            <center>
+              <h1
+                style={{ fontFamily: "Roboto, Helvetica, Arial, sans-serif" }}
+              >
+                Login to the website
+              </h1>
+            </center>
             <br />
             <TextField
               fullWidth={true}
@@ -42,7 +49,6 @@ function Login() {
               variant="outlined"
               onChange={(e) => {
                 setEmail(e.target.value);
-                console.log(email);
               }}
             />
             <br />
@@ -52,15 +58,49 @@ function Login() {
               id="outlined-basic"
               label="Password"
               variant="outlined"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
             />
             <br />
             <br />
-            <Button size={"large"} variant="contained">
-              Sign In
-            </Button>
-            <br />
-            <br />
-            Not a user? <a href="/register">Log in</a>
+            <center>
+              <Button
+                size={"large"}
+                variant="contained"
+                onClick={() => {
+                  const headers = {
+                    username: email,
+                    password: password,
+                  };
+                  console.log(headers);
+                  axios
+                    .post("http://localhost:3000/admin/login", null, {
+                      headers,
+                    })
+                    .then((resp) => {
+                      let token = resp.data.token;
+                      localStorage.setItem("token", token);
+                      window.location.href = "/";
+                    });
+                }}
+              >
+                Log In
+              </Button>
+              <br />
+              <br />
+              <Typography variant="body1">
+                Not a user?
+                <span
+                  style={{ color: "blue", textDecoration: "underline" }}
+                  onClick={() => {
+                    navigate("/register");
+                  }}
+                >
+                  Sign Up
+                </span>
+              </Typography>
+            </center>
           </Card>
         </div>
       </div>
